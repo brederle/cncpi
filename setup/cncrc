@@ -1,0 +1,24 @@
+{
+  "accessTokenLifetime": "30d",
+  "allowRemoteAccess": false,
+  "state": {
+    "checkForUpdates": true
+  },
+  "commands": [
+    {
+      "title": "Update",
+      "commands": "npm install -g cncjs@latest; sudo systemctl cncjs@`whoami` restart"
+    },
+    {
+      "title": "Shutdown",
+      "commands": "sudo /sbin/shutdown"
+    },
+    {
+      "title": "Reboot",
+      "commands": "sudo /sbin/reboot"
+    }
+  ],
+  "events": [],
+  "macros": [],
+  "users": []
+}
