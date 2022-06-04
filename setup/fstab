@@ -1,0 +1,2 @@
+# this is added as automatic mount point for NAS
+//my.own.naspath/files/cnc3018 /mnt/cnc3018 cifs username=cncjs,password=*****,uid=miller,gid=miller 0 0
