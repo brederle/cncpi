@@ -7,9 +7,9 @@
 # this script is (as far as possible) idempotent. This means you can rerun it
 # if you programmed an error and it will most probably work!
 
-pi_hostname=$1
-pi_new_user=$2
-pi_keyfile=$3
+pi_hostname=$1      # the new hostname for the pi
+pi_new_user=$2      # the replacement user for root
+pi_keyfile=$3       # the public key to use for install actions
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # this trick avoids additional scp logins
@@ -95,6 +95,18 @@ function setup_updates {
     "
 }
 
+function setup_hwrnd {
+    # you can check the usage of HW random service by
+    # sudo service rng-tools status
+    echo -n "
+    set -x
+    echo '+++ Switch to HW random device (avoid hickups in some OS versions) +++' 
+    set +x
+    apt-get -y install rng-tools
+    sed -ri 's/^.*#HRNGDEVICE=\/dev\/hwrng/HRNGDEVICE=\/dev\/hwrng/g' /etc/default/rng-tools-debian
+    "
+}
+
 
 function install_nodejs {
     echo -n "
@@ -128,11 +140,33 @@ function service_cncjs {
     set -x
     echo '+++ Setup CNCjs non-root service +++' 
     set +x
-    cp /tmp/cncjs@.service /etc/systemd/service/cncjs@$pi_new_user.service
+    cp /tmp/cncjs@.service /etc/systemd/system/cncjs@.service
     systemctl enable cncjs@$pi_new_user
+    systemctl start cncjs@$pi_new_user
+    rm -rf /tmp/cncjs@.service
     "
 }
 
+function service_mjpg_streamer {
+    echo -n "
+    set -x
+    echo '+++ Setup Mjpg stream for webcam +++' 
+    set +x
+    apt-get install -y build-essential git imagemagick libv4l-dev libjpeg-dev cmake ffmpeg
+    # Clone Repo in /tmp
+    cd /tmp
+    git clone https://github.com/jacksonliam/mjpg-streamer.git
+    cd mjpg-streamer/mjpg-streamer-experimental
+    # Make
+    make
+    make install
+    rm -rf mjpg-streamer
+    cp /tmp/mjpeg-streamer@.service /etc/systemd/system/mjpeg-streamer@.service
+    systemctl enable mjpeg-streamer@$pi_new_user
+    systemctl start mjpeg-streamer@$pi_new_user
+    rm -rf /tmp/mjpeg-streamer@.service
+    "
+}
 
 
 ###
@@ -167,6 +201,7 @@ ssh -i $pi_keyfile $pi_new_user@$pi_hostname "
 sudo --prompt='' -S -- /bin/bash -c \"
     $(setup_localisation)
     $(setup_updates)
+    $(setup_hwrnd)
     ### start individual configuration
     $(install_nodejs)
     \"
