@@ -1,6 +1,20 @@
 {
-  "accessTokenLifetime": "30d",
+  "ports": [
+    {
+        "path": "/dev/ttyUSB0",
+        "manufacturer": "ChronosMaker"
+    }
+  ],
+  "baudrates": [115200],
+  "mountPoints": [
+    {
+      "route": "/widget",
+      "target": "https://cncjs.github.io/cncjs-widget-boilerplate/v1/"
+    }
+  ],
+  "accessTokenLifetime": "5d",
   "allowRemoteAccess": false,
+  "watchDirectory": "/mnt/cnc3018",
   "state": {
     "checkForUpdates": true
   },
@@ -19,6 +33,18 @@
     }
   ],
   "events": [],
-  "macros": [],
+  "macros": [        
+  {
+    "id": "d784a67f-92ae-43f7-982a-e504167fd719",
+    "mtime": 1653646820266,
+    "name": "Laser mounted",
+    "content": "$32=1"
+  },
+  {
+    "id": "2e72f06e-9349-4651-9005-99336cfd5427",
+    "mtime": 1653646836166,
+    "name": "Spindle mounted",
+    "content": "$32=0"
+  }],
   "users": []
 }
