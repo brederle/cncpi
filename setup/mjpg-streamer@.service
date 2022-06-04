@@ -1,0 +1,15 @@
+[Unit]
+Description=Mpeg streamer for CNC server
+After=network.target
+
+[Service]
+User=%i
+Type=simple
+ExecStart=/usr/local/bin/mjpg_streamer -i "input_uvc.so -r 1280x720 -d /dev/video0 -f 20" -o "output_http.so -p 8080 -w /usr/local/share/mjpg-streamer/www"
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
