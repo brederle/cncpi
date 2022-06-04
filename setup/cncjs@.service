@@ -6,7 +6,7 @@ AssertPathExists=/home/%i/cncin
 [Service]
 Type=simple
 Environment=PATH=/home/%i/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ExecStart=/home/%i/.local/bin/cncjs --port 8000 --config /home/%i/.cncrc --watch-directory /home/%i/cncin
+ExecStart=/home/%i/.local/bin/cncjs --port 8000 --config /home/%i/.cncrc
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 User=%i
