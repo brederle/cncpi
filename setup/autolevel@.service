@@ -1,0 +1,15 @@
+[Unit]
+Description=Auto level functionality for cncjs
+After=network.target
+
+[Service]
+User=%i
+Type=simple
+ExecStart=/usr/bin/node /home/%i/.local/cncjs-kt-ext --port /dev/ttyUSB0
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

@@ -135,6 +135,19 @@ function install_cncjs {
     "
 }
 
+function install_autoleveler {
+    echo -n "
+    set -x
+    echo '+++ Install uutolevel tool +++' 
+    set +x
+    cd .local
+    git clone https://github.com/kreso-t/cncjs-kt-ext.git
+    cd cncjs-kt-ext
+    npm install
+    npm audit install
+    "
+}
+
 function service_cncjs {
     echo -n "
     set -x
@@ -144,6 +157,18 @@ function service_cncjs {
     systemctl enable cncjs@$pi_new_user
     systemctl start cncjs@$pi_new_user
     rm -rf /tmp/cncjs@.service
+    "
+}
+
+function service_autolevel {
+    echo -n "
+    set -x
+    echo '+++ Setup Autolevel non-root service +++' 
+    set +x
+    cp /tmp/autolevel@.service /etc/systemd/system/autolevel@.service
+    systemctl enable autolevel@$pi_new_user
+    systemctl start autolevel@$pi_new_user
+    rm -rf /tmp/autolevel@.service
     "
 }
 
@@ -168,7 +193,6 @@ function service_mjpg_streamer {
     "
 }
 
-
 ###
 # As pi user, create a replacement user with
 # - given, different name
@@ -192,6 +216,8 @@ sudo --prompt='' -S -- /bin/bash -c \"
 scp -i $pi_keyfile \
   ${SCRIPT_DIR}/cncrc \
   ${SCRIPT_DIR}/cncjs@.service \
+  ${SCRIPT_DIR}/mjpeg-streamer@.service \
+  ${SCRIPT_DIR}/autolevel@.service \
   $pi_new_user@$pi_hostname:/tmp
 
 ###
@@ -206,14 +232,22 @@ sudo --prompt='' -S -- /bin/bash -c \"
     $(install_nodejs)
     \"
 "
+
+# all install actions on hardened system for
+# non-root user
 ssh -i $pi_keyfile $pi_new_user@$pi_hostname " 
 /bin/bash -c \"
     $(install_cncjs)
+    $(install_autolevel)
     \"
 "
+
+# finishing root-user actions
 ssh -i $pi_keyfile $pi_new_user@$pi_hostname " 
 sudo --prompt='' -S -- /bin/bash -c \"
     $(service_cncjs)
+    $(service_service_mjpg_streamer)
+    $(service_autolevel)
     ### end individual configuration
     $(remove_pi_user)
     ### reboot

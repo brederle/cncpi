@@ -45,6 +45,18 @@
     "mtime": 1653646836166,
     "name": "Spindle mounted",
     "content": "$32=0"
-  }],
+  },
+  {
+    "id": "8487b894-adff-408e-a7b7-8839ddc32238",
+    "mtime": 1654355108362,
+    "name": "Auto level",
+    "content": "(#autolevel)"
+},
+{
+    "id": "bd717f67-3567-4297-ac70-227d30881d74",
+    "mtime": 1654355156012,
+    "name": "Auto-level (re-apply)",
+    "content": "(#autolevel_reapply)"
+}],
   "users": []
 }
