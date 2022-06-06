@@ -1,1 +1,6 @@
 .DS_Store
+
+# keep my own files as *.private
+authorized_keys
+wpa_supplicant.conf
+fstab
