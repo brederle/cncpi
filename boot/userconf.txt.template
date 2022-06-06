@@ -1,0 +1,5 @@
+# the new buster way of creating an initial user
+# the password has to be pre-hashed with `echo 'mypassword' | openssl passwd -6 -stdin`
+# On Mac, it is more tricky, e.g. `docker run --rm -ti alpine:latest mkpasswd -m sha512 [password] [| pbcopy]`
+# remove all comment lines!!! only the user entry should be kept!
+my_username:my_hashed_password

@@ -11,7 +11,6 @@ diskname=$2   # just the name, not the raw name, without /dev
 sudo diskutil unmountDisk /dev/$diskname
 sudo dd if=$imagepath of=/dev/r$diskname bs=1m conv=sync
 sleep 1
-cp wpa_supplicant.conf /Volumes/boot
-cp config.txt /Volumes/boot
+cp config.txt userconf.txt wpa_supplicant.conf /Volumes/boot
 touch /Volumes/boot/ssh
 sudo diskutil unmountDisk /dev/$2
